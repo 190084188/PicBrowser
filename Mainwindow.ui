@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="graypb">
     <property name="geometry">
      <rect>
       <x>180</x>
@@ -27,7 +27,7 @@
      <string>灰度化</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="invertpb">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -40,7 +40,7 @@
      <string>反色</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="before">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -53,7 +53,7 @@
      <string>上一张</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="after">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -66,7 +66,7 @@
      <string>下一张</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="angleinput">
     <property name="geometry">
      <rect>
       <x>380</x>
@@ -89,7 +89,7 @@
      <string>旋转角度</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="rotatepb">
     <property name="geometry">
      <rect>
       <x>450</x>
@@ -102,7 +102,7 @@
      <string>旋转</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_6">
+   <widget class="QPushButton" name="originpb">
     <property name="geometry">
      <rect>
       <x>540</x>
@@ -115,20 +115,21 @@
      <string>恢复原图</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QLabel" name="piclabel">
     <property name="geometry">
      <rect>
       <x>160</x>
       <y>50</y>
-      <width>461</width>
-      <height>351</height>
+      <width>471</width>
+      <height>321</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0" colspan="2">
-      <widget class="QGraphicsView" name="graphicsView"/>
-     </item>
-    </layout>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(234, 255, 243)</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -144,25 +145,21 @@
     <property name="title">
      <string>打开</string>
     </property>
-    <addaction name="Filedir"/>
-    <addaction name="File"/>
+    <addaction name="Open_Pic"/>
+    <addaction name="separator"/>
+    <addaction name="Open_Filedir"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="Filedir">
-   <property name="text">
-    <string>图片文件夹</string>
-   </property>
-  </action>
-  <action name="File">
+  <action name="Open_Pic">
    <property name="text">
     <string>图片文件</string>
    </property>
   </action>
-  <action name="Spin">
+  <action name="Open_Filedir">
    <property name="text">
-    <string>旋转</string>
+    <string>图片文件夹</string>
    </property>
   </action>
  </widget>

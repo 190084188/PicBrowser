@@ -3,8 +3,6 @@ import os
 import cv2 as cv
 import numpy as np
 
-img_path = '1.jpg'
-
 
 class ImgPross:
 
@@ -48,8 +46,3 @@ class ImgPross:
         self.img = img_i
         return img_i
 
-
-img = cv.imread(img_path)
-img = ImgPross(img, img_path)
-img.invert()
-img.show()
