@@ -21,7 +21,7 @@ class ImageViewer(QMainWindow, demo.Ui_MainWindow):
         self.scale = 1  # 图片默认缩放比例
         self.label.wheelEvent = self.wheelEvent  # 给label添加滚轮事件
         self.label.mousePressEvent = self.mousePressEvent
-        self.label.setScaledContents(True)
+        #self.label.setScaledContents(True)
 
         # 连接信号和槽
         self.action1.triggered.connect(self.open_image)
@@ -36,15 +36,16 @@ class ImageViewer(QMainWindow, demo.Ui_MainWindow):
             img = cv2.imread(img_path)
             self.img_cv = img
             self.img_r = img
+            print(img.shape[1], img.shape[0])
             # 将 OpenCV 图片转换为 QImage
             img = QImage(img, img.shape[1], img.shape[0], QImage.Format_RGB888).rgbSwapped()
+
+            img = img.scaled(self.label.size(), Qt.KeepAspectRatio)
             self.img = img
-            self.pixmap = QPixmap.fromImage(img)
             # 显示图片
             self.label.setPixmap(QPixmap.fromImage(img))
 
     def wheelEvent(self, event):
-        self.label.setScaledContents(False)
         if event.angleDelta().y() > 0:
             self.scale *= 1.1
         else:

@@ -30,10 +30,11 @@ class Ui_MainWindow(object):
         self.after.setGeometry(QtCore.QRect(650, 200, 75, 23))
         self.after.setObjectName("after")
         self.angleinput = QtWidgets.QTextEdit(self.centralwidget)
-        self.angleinput.setGeometry(QtCore.QRect(380, 460, 61, 31))
+        self.angleinput.setGeometry(QtCore.QRect(370, 450, 71, 41))
+        self.angleinput.setStyleSheet("font: 20pt \"Adobe Arabic\";")
         self.angleinput.setObjectName("angleinput")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(380, 440, 54, 12))
+        self.label.setGeometry(QtCore.QRect(380, 431, 54, 21))
         self.label.setObjectName("label")
         self.rotatepb = QtWidgets.QPushButton(self.centralwidget)
         self.rotatepb.setGeometry(QtCore.QRect(450, 450, 61, 41))
@@ -75,6 +76,11 @@ class Ui_MainWindow(object):
         self.invertpb.setText(_translate("MainWindow", "反色"))
         self.before.setText(_translate("MainWindow", "上一张"))
         self.after.setText(_translate("MainWindow", "下一张"))
+        self.angleinput.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Adobe Arabic\'; font-size:20pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"> </p></body></html>"))
         self.label.setText(_translate("MainWindow", "旋转角度"))
         self.rotatepb.setText(_translate("MainWindow", "旋转"))
         self.originpb.setText(_translate("MainWindow", "恢复原图"))
