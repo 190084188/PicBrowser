@@ -1,20 +1,17 @@
 # 开发第一个基于PyQt5的桌面应用
-
 import sys
-from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage
-from math import *
+from PyQt5.QtGui import QPixmap, QImage, QIcon
 import Mainwindow
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow, QFileDialog, QMessageBox
 import os
 import cv2 as cv
-import numpy as np
 
 
 class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
     def __init__(self):
         super(ImageViewer, self).__init__()
+        self.img_cv = None
         self.cur_img_idx = None
         self.img_list = None
         self.img_r = None
@@ -51,8 +48,8 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
             self.scale = min(scale1, scale2)
             w = int(img.shape[1] * self.scale)
             h = int(img.shape[0] * self.scale)
-            self.img_origin = cv.resize(img,(w,h))
-            self.img_r = self.img_origin
+            self.img_origin = cv.resize(img, (w, h))
+            self.img_cv = self.img_origin
             # 将 OpenCV 图片转换为 QImage
             img = QImage(img, img.shape[1], img.shape[0], QImage.Format_RGB888).rgbSwapped()
             self.img = img
@@ -66,12 +63,13 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
 
     def open_img_dir(self):
         img_dir = QFileDialog.getExistingDirectory(self, '选择图片文件夹')
-        img_files = [img_dir + '/' + img for img in os.listdir(img_dir) if
-                     img.lower().endswith('.png') or img.lower().endswith('.jpg') or img.lower().endswith('.jpeg')]
-        if len(img_files) > 0:
-            self.img_list = img_files
-            self.cur_img_idx = 0
-            self.show_img()
+        if img_dir:
+            img_files = [img_dir + '/' + img for img in os.listdir(img_dir) if
+                         img.lower().endswith('.png') or img.lower().endswith('.jpg') or img.lower().endswith('.jpeg')]
+            if len(img_files) > 0:
+                self.img_list = img_files
+                self.cur_img_idx = 0
+                self.show_img()
 
     def show_img(self):
         img = cv.imread(self.img_list[self.cur_img_idx])
@@ -81,7 +79,7 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
         w = int(img.shape[1] * self.scale)
         h = int(img.shape[0] * self.scale)
         self.img_origin = cv.resize(img, (w, h))
-        self.img_r = self.img_origin
+        self.img_cv = self.img_origin
         # 将 OpenCV 图片转换为 QImage
         img = QImage(img, img.shape[1], img.shape[0], QImage.Format_RGB888).rgbSwapped()
         self.img = img
@@ -95,6 +93,7 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
 
     def prev_img(self):
         if len(self.img_list) == 0:
+            QMessageBox.warning(self, "警告", "打开文件夹后使用", QMessageBox.Cancel)
             return
         self.cur_img_idx -= 1
         if self.cur_img_idx < 0:
@@ -103,6 +102,7 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
 
     def next_img(self):
         if len(self.img_list) == 0:
+            QMessageBox.warning(self, "警告", "打开文件夹后使用", QMessageBox.Cancel)
             return
         self.cur_img_idx += 1
         if self.cur_img_idx >= len(self.img_list):
@@ -128,22 +128,24 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
     def gray(self):
         if self.img is None:
             return
-
-        img = cv.cvtColor(self.img_origin, cv.COLOR_BGR2GRAY)
-        img = QImage(img, img.shape[1], img.shape[0],img.strides[0], QImage.Format_Grayscale8)
+        img = cv.cvtColor(self.img_cv, cv.COLOR_BGR2GRAY)
+        self.img_cv = img
+        img = QImage(img, img.shape[1], img.shape[0], img.strides[0], QImage.Format_Grayscale8)
         self.img = img
         self.piclabel.setPixmap(QPixmap.fromImage(img))
 
     def origin(self):
         if self.img is None:
             return
+        self.img_cv = self.img_origin
         self.img = self.img_qt
         self.piclabel.setPixmap(QPixmap.fromImage(self.img))
 
     def invert(self):
         if self.img is None:
             return
-        img = 255 - self.img_origin
+        img = 255 - self.img_cv
+        self.img_cv = img
         img = QImage(img, img.shape[1], img.shape[0], img.strides[0], QImage.Format_RGB888).rgbSwapped()
         self.img = img
         self.piclabel.setPixmap(QPixmap.fromImage(img))
@@ -158,9 +160,13 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
         (h, w) = self.img_origin.shape[:2]
         center = (w / 2, h / 2)
         M = cv.getRotationMatrix2D(center, int(angle), 1.0)
-        img = cv.warpAffine(self.img_r, M, (w, h), borderValue=(243,255,234,0))
-        self.img_r = img
-        img = QImage(img, img.shape[1], img.shape[0],img.strides[0], QImage.Format_RGB888).rgbSwapped()
+        img = cv.warpAffine(self.img_cv, M, (w, h), borderValue=(243, 255, 234, 0))
+        self.img_cv = img
+        channels = img.shape[2] if len(img.shape) == 3 else 1
+        if channels == 1:
+            img = QImage(img, img.shape[1], img.shape[0], img.strides[0], QImage.Format_Indexed8)
+        else:
+            img = QImage(img, img.shape[1], img.shape[0], img.strides[0], QImage.Format_RGB888).rgbSwapped()
         self.img = img
         self.piclabel.setPixmap(QPixmap.fromImage(img))
 
@@ -168,5 +174,7 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     main = ImageViewer()
+    main.setWindowIcon(QIcon('C:\\Users\\Lismoon\\Desktop\\logo1.png'))
+    main.setWindowTitle('图像浏览器1.0by李思民')
     main.show()
     sys.exit(app.exec_())
