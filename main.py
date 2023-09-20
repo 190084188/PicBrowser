@@ -125,7 +125,7 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
         if self.img is None:
             return
         img = cv.cvtColor(self.img_cv, cv.COLOR_BGR2GRAY)
-        self.img_cv = img
+        #self.img_cv = img
         img = QImage(img, img.shape[1], img.shape[0], img.strides[0], QImage.Format_Grayscale8)
         self.img = img
         self.piclabel.setPixmap(QPixmap.fromImage(img))
@@ -169,6 +169,7 @@ class ImageViewer(QMainWindow, Mainwindow.Ui_MainWindow):
             img = QImage(img, img.shape[1], img.shape[0], img.strides[0], QImage.Format_RGB888).rgbSwapped()
         self.img = img
         self.piclabel.setPixmap(QPixmap.fromImage(img))
+
 
 
 if __name__ == '__main__':

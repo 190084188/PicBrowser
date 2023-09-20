@@ -1,25 +1,26 @@
 import cv2
 import numpy as np
+#读取图片
+src = cv2.imread('fish.bmp', cv2.IMREAD_UNCHANGED)
+#设置卷积核
+def set_kernel(size = 3,type = 1 ):
+    if type == 1:
+        kernel = np.ones((size, size), np.uint8)
+    elif type == 2:
+        kernel = np.zeros((size,size),np.uint8)
+        if size%2 != 0:
+            kernel[int(size/2-0.5)].fill(1)
+            kernel[:int(size/2-0.5)].fill(1)
+        else:
+            kernel[size/2].fill(1)
+            kernel[:size/2].fill(1)
 
-img = cv2.imread("C:\\Users\\Lismoon\\Desktop\\logo.png")
-cv2.imshow('src', img)
-print(img.shape)
-
-result = cv2.cvtColor(img, cv2.COLOR_BGR2BGRA)
-
-for i in range(0, img.shape[0]):  # 访问所有行
-    for j in range(0, img.shape[1]):  # 访问所有列
-        if img[i, j, 0] > 200 and img[i, j, 1] > 200 and img[i, j, 2] > 200:
-            result[i, j, 3] = 0
-
-cv2.imwrite('C:\\Users\\Lismoon\\Desktop\\logo1.png', result, [int(cv2.IMWRITE_PNG_COMPRESSION), 0])
-print(result.shape)
-cv2.imshow('result', result)
-B, G, R, A = cv2.split(result)
-cv2.imshow('B', B)
-cv2.imshow('G', G)
-cv2.imshow('R', R)
-cv2.imshow('A', A)
-
-cv2.waitKey()
+kernel = set_kernel(3,2)
+#图像腐蚀处理
+erosion = cv2.erode(src, kernel)
+#显示图像
+cv2.imshow("src", src)
+cv2.imshow("result", erosion)
+#等待显示
+cv2.waitKey(0)
 cv2.destroyAllWindows()
